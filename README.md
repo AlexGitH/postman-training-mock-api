@@ -18,6 +18,12 @@ Run command below to start API for testing:
 npm start
 ```
 
+or with specific PORT for the API
+
+```bash
+PORT=4001 npm start
+```
+
 > NOTE: all changes such as new, modified or deleted users will be lost after server restart.
 
 ## API description
