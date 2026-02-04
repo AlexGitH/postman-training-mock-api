@@ -1,11 +1,12 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import { v4 as uuid } from "uuid";
+import { DEFAULT_APP_PORT } from "./constants";
 
 const app = express();
 app.use(express.json());
 
-const PORT = 3000;
+const PORT = process.env.PORT ?? DEFAULT_APP_PORT;
 const JWT_SECRET = "training_secret";
 
 /* -------------------- In-memory data -------------------- */
