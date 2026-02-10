@@ -1,7 +1,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import { v4 as uuid } from "uuid";
-import { DEFAULT_APP_PORT } from "./constants";
+import { DEFAULT_APP_PORT } from "./constants.js";
 
 const app = express();
 app.use(express.json());
