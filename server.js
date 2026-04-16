@@ -11,6 +11,9 @@ const JWT_SECRET = "training_secret";
 
 /* -------------------- In-memory data -------------------- */
 
+//UUID: user
+const activeSessions = {};
+
 const users = [
   {
     id: "1",
@@ -30,9 +33,16 @@ const users = [
 
 /* -------------------- Helpers -------------------- */
 
-function generateToken(user) {
+/**
+ * Generate JWT token.
+ *
+ * @param {User} user A User object.
+ * @param {UUID} sid Session ID.
+ * @returns {string}
+ */
+function generateToken(user, sid) {
   return jwt.sign(
-    { id: user.id, role: user.role },
+    { id: user.id, role: user.role, sid },
     JWT_SECRET,
     { expiresIn: "15m" }
   );
@@ -46,10 +56,15 @@ function authMiddleware(req, res, next) {
 
   const token = header.replace("Bearer ", "");
   try {
-    req.user = jwt.verify(token, JWT_SECRET);
+    const {id, role, sid} = jwt.verify(token, JWT_SECRET);
+    if (activeSessions[sid]?.id !== id) {
+
+      throw new Error("Invalid session");
+    }
+    req.user = { id, role, sid };
     next();
-  } catch {
-    res.status(401).json({ message: "Invalid token" });
+  } catch(err) {
+    res.status(401).json({ message: "Invalid token"+". "+ err?.message });
   }
 }
 
@@ -69,6 +84,10 @@ app.post("/auth/login", (req, res) => {
     return res.status(400).json({ message: "Email and password required" });
   }
 
+  if (activeSessions[email]) {
+    return res.status(401).json({ message: "User is already logged in." });
+  }
+
   const user = users.find(
     u => u.email === email && u.password === password
   );
@@ -77,10 +96,26 @@ app.post("/auth/login", (req, res) => {
     return res.status(401).json({ message: "Invalid credentials" });
   }
 
+  const sid = uuid();
+
+  activeSessions[(activeSessions[sid] = user).email]=sid;
+
   res.json({
-    accessToken: generateToken(user)
+    accessToken: generateToken(user, sid)
   });
 });
+
+app.get("/auth/logout", authMiddleware, (req, res) => {
+  const { id, sid } = req?.user;
+  const user = activeSessions[sid];
+
+  if ( user != null && activeSessions[sid]?.id === user?.id ) {
+    delete activeSessions[user.email];
+    delete activeSessions[sid];
+    return res.status(200).json({ message: 'Logged out successfully' });
+  }
+  return res.status(404).json({ message: "User or session not found" });
+})
 
 /* -------------------- USERS -------------------- */
 

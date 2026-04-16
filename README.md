@@ -28,12 +28,13 @@ PORT=4001 npm start
 
 ## API description
 
-| Method | Endpoint      | Description                            |
-| ------ | ------------- | -------------------------------------- |
-| POST   | `/auth/login` | Login with email and password          |
-| GET    | `/users`      | List existing users (admin only)       |
-| GET    | `/users/:id`  | Pick specific user                     |
-| POST   | `/users`      | Create new user (admin only)           |
-| PATCH  | `/users/:id`  | Update existing user info (admin only) |
-| DELETE | `/users/:id`  | Remove specific user (admin only)      |
-| GET    | `/error/500`  | Test specific error code               |
+| Method | Endpoint       | Description                            |
+| ------ | -------------  | -------------------------------------- |
+| POST   | `/auth/login`  | Login with email and password          |
+| GET    | `/auth/logout` | Logout user which was logged in        |
+| GET    | `/users`       | List existing users (admin only)       |
+| GET    | `/users/:id`   | Pick specific user                     |
+| POST   | `/users`       | Create new user (admin only)           |
+| PATCH  | `/users/:id`   | Update existing user info (admin only) |
+| DELETE | `/users/:id`   | Remove specific user (admin only)      |
+| GET    | `/error/500`   | Test specific error code               |

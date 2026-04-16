@@ -6,7 +6,8 @@
     "node": ">=22.0.0"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "start:inspect": "node --inspect=0.0.0.0:9229 server.js"
   },
   "dependencies": {
     "express": "4.19.2",
