@@ -109,7 +109,8 @@ app.get("/auth/logout", authMiddleware, (req, res) => {
   const { id, sid } = req?.user;
   const user = activeSessions[sid];
 
-  if ( user != null && activeSessions[sid]?.id === user?.id ) {
+  // if ( user != null && activeSessions[sid]?.id === id ) {
+  if (user?.email != null) {
     delete activeSessions[user.email];
     delete activeSessions[sid];
     return res.status(200).json({ message: 'Logged out successfully' });
